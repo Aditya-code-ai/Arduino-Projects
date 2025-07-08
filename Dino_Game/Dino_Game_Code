@@ -1,0 +1,263 @@
+#include <LiquidCrystal_I2C.h>
+
+LiquidCrystal_I2C lcd(0x27,16,2); 
+byte DINO_LEFT_1[8] = {B00000, B00000, B00010, B00010, B00011, B00011, B00001, B00001};
+byte DINO_RIGHT_1[8] = {B00111, B00111, B00111, B00100, B11100, B11100, B11000, B01000};
+byte DINO_LEFT_2[8] = {B00000, B00000, B00010, B00010, B00011, B00011, B00001, B00001};
+byte DINO_RIGHT_2[8] = {B00111, B00111, B00111, B00100, B11100, B11100, B11000, B00000};
+byte DINO_LEFT_3[8] = {B00000, B00000, B00010, B00010, B00011, B00011, B00001, B00000};
+byte DINO_RIGHT_3[8] = {B00111, B00111, B00111, B00100, B11100, B11100, B11000, B01000};
+byte CACTUS_1[8] = {B00000, B00100, B00100, B10100, B10100, B11100, B00100, B00100};
+byte CACTUS_2[8] = {B00100, B00101, B00101, B10101, B11111, B00100, B00100, B00100};
+byte BIRD_LEFT[8] = {B00001, B00001, B00001, B00001, B01001, B11111, B00000, B00000};
+byte BIRD_RIGHT[8] = {B00000, B10000, B11000, B11100, B11110, B11111, B00000, B00000};
+
+int dino_first_column = 1;
+int dino_second_column = 2;
+int dino_row = 1;
+unsigned long timer_dino_leg = 0; 
+int period_dino = 100; 
+int toggle = 1;
+int cactus_row = 0;
+int cactus_start_column = 13;
+int period_obstacle = 100;
+unsigned long timer_obstacle = 0;
+int a = 0;
+int b = 1;
+int c = 2;
+int d = 0;
+unsigned long timer_score_update = 0;
+int period_score = 100;
+int unit_place_score = 0;
+int tens_place_score = 0;
+int obstacle_detection = 0;
+int bird_start_column = 13;
+int e = 0;
+int bird_row = 1;
+int current_buttonstate = 0;
+int previous_buttonstate = 0;
+int f = 13;
+int aceleration = 1;
+unsigned long timer_sound = 0;
+int period_sound = 800;
+int button = 7; 
+int buzzer = 3; 
+
+void setup() {
+
+  lcd.init();
+  lcd.clear();         
+  lcd.backlight(); 
+
+  pinMode(button, INPUT);
+
+  pinMode(buzzer, OUTPUT);
+
+  lcd.begin(16, 2);
+  lcd.createChar(0, DINO_LEFT_1);
+  lcd.createChar(1, DINO_RIGHT_1);
+  lcd.createChar(2, DINO_LEFT_2);
+  lcd.createChar(3, DINO_RIGHT_2);
+  lcd.createChar(4, DINO_LEFT_3);
+  lcd.createChar(5, DINO_RIGHT_3);
+  lcd.createChar(6, CACTUS_1);
+  lcd.createChar(7, CACTUS_2);
+}
+void loop() {
+  if (millis() > timer_dino_leg + period_dino) { 
+   timer_dino_leg = millis();
+    if (toggle == 1) {
+      toggle = 2;
+    }
+    else if (toggle == 2) {
+     toggle = 1;
+
+    }
+
+  }
+
+  if (millis() > timer_obstacle + period_obstacle) { 
+    timer_obstacle = millis();
+
+    cactus_start_column = cactus_start_column - 1;
+    if (cactus_start_column < 0) {
+      cactus_start_column = 13;
+      period_obstacle = period_obstacle - aceleration; 
+      obstacle_detection = random(0, 3); 
+
+    }
+
+    f = cactus_start_column + 1;
+    lcd.setCursor(f, 1);          
+    lcd.print(" ");
+
+    f = cactus_start_column + 1;
+    lcd.setCursor(f, 0);          
+    lcd.print(" ");
+
+    lcd.setCursor(0, 1);           
+    lcd.print(" ");
+
+    lcd.setCursor(0, 0);
+    lcd.print(" ");
+
+    a = 1;
+  }
+
+  if (d == 0) {
+    if (toggle == 1) {
+      lcd.setCursor(dino_first_column, dino_row);
+      lcd.write(byte(2));
+      lcd.setCursor(dino_second_column, dino_row);
+      lcd.write(byte(3));
+    }
+    if (toggle == 2) {
+      lcd.setCursor(dino_first_column, dino_row);
+      lcd.write(byte(4));
+      lcd.setCursor(dino_second_column, dino_row);
+      lcd.write(byte(5));
+    }
+  }
+
+  if (a == 1) {
+
+    if (obstacle_detection == 1) {
+      cactus_row = 1;
+      lcd.createChar(6, CACTUS_1);
+      lcd.setCursor(cactus_start_column, cactus_row);
+      lcd.write(byte(6));
+
+    }
+    else if (obstacle_detection == 2) {
+      cactus_row = 1;
+      lcd.createChar(7, CACTUS_2);
+      lcd.setCursor(cactus_start_column, cactus_row);
+      lcd.write(byte(7));
+
+    }
+    else {      
+
+     bird_start_column = cactus_start_column;
+     bird_start_column = bird_start_column - 1;
+      cactus_row = 0;
+      lcd.createChar(6, BIRD_LEFT);
+      lcd.setCursor(bird_start_column, cactus_row);
+      lcd.write(byte(6));
+
+      lcd.createChar(7, BIRD_RIGHT);
+      lcd.setCursor(cactus_start_column, cactus_row); 
+      lcd.write(byte(7));
+
+    }
+
+    a = 0;
+  }
+
+
+  if (digitalRead(button) == HIGH && (cactus_start_column == 1 || cactus_start_column == 2 || bird_start_column == 1 || bird_start_column == 2) && cactus_row == 0 ) {
+    lcd.clear();
+    lcd.setCursor(5, 0);
+    lcd.print("GAME OVER");
+    delay(2000);
+    lcd.clear();
+    cactus_start_column = 15;
+    period_obstacle = 100;
+   unit_place_score = 0;
+    tens_place_score = 0;
+    period_obstacle = 100;
+
+  }
+
+  if ((cactus_start_column == b || cactus_start_column == c) && cactus_row == 1) {
+    int note[] = {200, 150};
+    for (int i = 0; i < 2; i++) {
+      tone(buzzer, note[i], 250);
+      delay(200);
+    }
+    lcd.clear();
+    lcd.setCursor(5, 0);
+    lcd.print("GAME OVER");
+    delay(2000);
+    lcd.clear();
+    cactus_start_column = 15;
+    period_obstacle = 100;
+    unit_place_score = 0;
+    tens_place_score = 2;
+    period_obstacle = 100;
+  }
+
+  if (digitalRead(button) == HIGH) {
+
+    b = 50; 
+    c = 50;
+
+    if (d == 0) {
+      lcd.setCursor(0, 1);  
+      lcd.print("    ");
+    }
+    d = 1;
+
+    lcd.setCursor(dino_first_column, 0);
+    lcd.write(byte(2));
+    lcd.setCursor(dino_second_column, 0);
+    lcd.write(byte(3));
+
+    if (millis() > timer_score_update + button) { 
+  timer_score_update = millis();
+
+    int note[] = {600};
+    for (int i = 0; i < 1; i++) {
+      tone(buzzer, note[i], 150);
+      delay(20);
+    }
+    }
+  }
+  else {
+  b = 1;  
+  c = 2;
+  d = 0;
+
+  lcd.setCursor(dino_first_column, 0);
+  lcd.print("  ");  
+}
+
+
+if (millis() > timer_score_update + period_score) { 
+ timer_score_update = millis();
+  lcd.setCursor(14, 1);
+  lcd.print(unit_place_score);
+
+ unit_place_score = unit_place_score + 1;
+  
+
+  if (unit_place_score == 100) {
+    int note[] = {800, 900};
+    for (int i = 0; i < 2; i++) {
+      tone(buzzer, note[i], 150);
+      delay(150);
+      unit_place_score = 0;
+     tens_place_score = tens_place_score + 1;
+      if (tens_place_score == 100) {
+        tens_place_score = 0;
+      }
+
+    }
+
+  }
+
+  lcd.setCursor(14, 1);
+  lcd.print(unit_place_score);
+  lcd.setCursor(14, 0);
+  lcd.print(tens_place_score);
+
+  
+  current_buttonstate = digitalRead(button);
+  if (current_buttonstate != previous_buttonstate)
+  {
+    lcd.setCursor(1, 0);
+    lcd.print("  ");
+  }
+  previous_buttonstate = current_buttonstate;
+
+}
+}
