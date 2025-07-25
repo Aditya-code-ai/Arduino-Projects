@@ -1,0 +1,17 @@
+// Project 5: More on RGB Led by including RGB library
+
+#include <AlaLedRgb.h>
+#define red 3
+#define blue 6
+#define green 5
+void setup()
+{
+  rgbLed.initPWM(red,blue,green)
+    rgbLed.setBrightness(0x66FF44);
+  rgbLed.setAnimation(ALA_FEDCOLORSLOOP,5000,alaPalRgb);
+}
+
+void loop()
+{
+  rgbLed.runAnimation();
+}
