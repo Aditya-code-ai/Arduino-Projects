@@ -1,0 +1,29 @@
+// Project 11: Working of Thermistor  
+//Two types of thermistor: PTC(positive coefficient thermistor,) and NTC(Negative coefficient thermistor).
+//PTC:resistance increases with increase in temperature.
+//NTC:resistance decreases with increase in temperature.
+#define SeriesResistor 10000
+#define ThermistorPin A0
+
+void setup()
+{
+ Serial.begin(9600);
+}
+
+void loop()
+{
+  float reading;
+  
+  reading=analogRead(ThermistorPin);
+  
+  Serial.println("Analog Reading ");
+  Serial.println(reading);
+  
+  reading= (1023/reading)-1;
+  reading= SeriesResistor/reading; // convert analog value into thermistor resistance.
+  
+  Serial.print("Thermistor resistance ");
+  Serial.println(reading);
+  
+  delay(1000);
+}
