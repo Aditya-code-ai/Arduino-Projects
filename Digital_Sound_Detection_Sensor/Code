@@ -1,0 +1,24 @@
+// Project 16: Working of Digital Sound detection sensor (sensing sound)
+
+const int soundSensorPin = 11; // Digital pin connected to the sound sensor's D0 pin
+const int ledPin = 7;        // Digital pin connected to the LED
+
+void setup() {
+  pinMode(soundSensorPin, INPUT); // Set the sound sensor pin as input
+  pinMode(ledPin, OUTPUT);        // Set the LED pin as output
+  Serial.begin(9600);             // Initialize serial communication
+}
+
+void loop() {
+  int soundDetected = digitalRead(soundSensorPin); // Read the digital output of the sensor
+
+  if (soundDetected == HIGH) {
+    digitalWrite(ledPin, HIGH); // Turn on the LED if sound is detected
+    Serial.println("Sound detected!");
+  } else {
+    digitalWrite(ledPin, LOW); // Turn off the LED if no sound is detected
+    Serial.println("No sound detected.");
+  }
+
+  delay(100); // Small delay for stability
+}
