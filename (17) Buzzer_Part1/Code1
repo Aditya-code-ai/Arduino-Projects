@@ -1,0 +1,43 @@
+// Project 17: Working of passive Buzzer (produce sound)
+
+// Pin connected to the buzzer
+const int buzzerPin = 8; 
+
+void setup() {
+  // Set the buzzer pin as output
+  pinMode(buzzerPin, OUTPUT);
+}
+
+void loop() {
+  // Turn the buzzer on
+  digitalWrite(buzzerPin, HIGH);
+  delay(500); // Wait for 500 milliseconds (0.5 second)
+
+  // Turn the buzzer off
+  digitalWrite(buzzerPin, LOW);
+  delay(500); // Wait for 500 milliseconds (0.5 second)
+}
+
+// ***************Advanced approach***************
+
+
+// Pin connected to the buzzer
+const int buzzerPin = 8; 
+
+void setup() {
+  // No setup required for tone
+}
+
+void loop() {
+  // Play a 1kHz tone for 500ms
+  tone(buzzerPin, 1000, 500); 
+  delay(1000); // Wait for 1 second
+  
+  // Play a 500Hz tone for 300ms
+  tone(buzzerPin, 500, 300);
+  delay(1000); // Wait for 1 second
+  
+  // No tone for 1 second
+  noTone(buzzerPin);
+  delay(1000);
+}
