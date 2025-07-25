@@ -1,0 +1,48 @@
+// Project 8: Working of TCS34725 RGB Light Sensor(Detecting color)
+
+#include<Wire.h>
+#include "Adafruit_TCS34725.h"
+
+Adafruit-TCS34725 tcs= Adaafruit_TCS34725(TCS34725_INTEGRATIONTIME_50MS, TCS34725_GAIN_4x);
+/* TCS34725_INTEGRATIONTIME_50MS: The time the sensor takes to collect light data (50 milliseconds).
+TCS34725_GAIN_4X: The sensor's sensitivity or gain is set to 4x. (Higher gain is useful for low-light conditions.) */
+
+
+void setup()
+{
+  Serial.begin(9600);
+  Serial.println("Color View Test!");
+  
+  if(tcs.begin()){
+    Serial.println("Found sensor");
+  }else{
+  Serial.println("No TCS34725 found ... check your connections");
+    while(1); /* tcs.begin(): Initializes the sensor. If not found, the program stops by entering an infinite 
+    loop (while(1);) */
+
+  }
+  
+}
+
+void loop()
+{
+  uint16_t clear, red, green, blue; // clear, red, green, blue are 16-bit unsigned integers to store light intensity values.              
+  
+  tcs.setInterrupt(false);   // Activates the sensor's onboard LED for illumination. (turn on LED)
+  
+  delay(60); // takes 50ms to read
+  
+  tcs.getRowData(&red, &green, &blue, &clear);/* Reads the raw color data:
+                                                red, green, blue: Light intensity values for red, green, and blue wavelengths.
+                                                clear: Overall light intensity (combined light across all wavelengths). */
+  
+  tcs.setInterrupt(true); // Deactivates the LED after data collection. (turn off LED)
+  
+  Serial.print("C:\t"); Serial.print(clear);
+  Serial.print("\tR:\t"); Serial.print(red);
+  Serial.print("\tG:\t"); Serial.print(green);
+  Serial.print("\tB:\t"); Serial.println(blue);
+} 
+
+/* Output:
+C: [clear_value]    R: [red_value]    G: [green_value]    B: [blue_value] */
