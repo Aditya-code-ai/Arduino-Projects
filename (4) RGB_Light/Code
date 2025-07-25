@@ -1,0 +1,29 @@
+// Project 4: Working of RGB light
+
+//const intb red_pin=3;
+#define RED_PIN   3
+#define BLUE_PIN  6
+#define GREEN_PIN 5
+
+void setup()
+{
+  pinMode(RED_PIN, OUTPUT);
+  pinMode(BLUE_PIN, OUTPUT);
+  pinMode(GREEN_PIN, OUTPUT);
+}
+
+void loop()
+{
+  digitalWrite(GREEN_PIN, LOW);//turn the LED OFF
+  digitalWrite(RED_PIN, HIGH); //turn the LED ON
+  delay(1000); // Wait for 1000 millisecond(s)
+  digitalWrite(RED_PIN, LOW); //turn the LED OFF
+  digitalWrite(BLUE_PIN, HIGH); //turn the LED ON
+  delay(1000); // Wait for 1000 millisecond(s)
+  digitalWrite(BLUE_PIN, LOW); //turn the LED OFF
+  digitalWrite(GREEN_PIN, HIGH); //turn the LED ON
+  delay(1000); // Wait for 1000 millisecond(s)
+  
+}
+
+
