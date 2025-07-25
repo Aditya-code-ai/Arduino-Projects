@@ -1,0 +1,28 @@
+// Working of Thermistor (part-2)
+
+#include<Thermistor.h> // library allows to calculations relie on steinhart-Hart equation.
+#define NTC_pin A0
+
+// Thermistor object
+THERMISTOR thermistor(NTC_pin,  // Analog pin
+                      7500,     // Nominal resistance at 25 degree 
+                      3950,     // thermistor's beta coefficient
+                      1000);    // Value of the series resistor
+
+// Global temperature reading
+uint16_t temp;
+
+void setup()
+{
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  temp = thermistor.read();
+  
+  Serial.print("Temp in 1/10 degree C: "); // Read temperature
+  Serial.println(temp);
+  
+  delay(5000);
+}
