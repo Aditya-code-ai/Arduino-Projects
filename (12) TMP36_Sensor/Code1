@@ -1,0 +1,34 @@
+// Project 12: Working of TMP36 temperature sensor
+
+int sensorPin=0; // the reading is obtained from analog pin 0 (A0)
+float supply_voltage=5; //if you are using a 3.3V change it accordingly.
+
+void setup()
+{
+ //analogReference(EXTERNAL); // if using a 3.3V as reference by bridging it to the AREF pin,
+                             //then uncomment this line. If using 5V then it is not necessary.
+  Serial.begin(9600); // start the serial conversion with the computer
+                      // to view the result open the serial monitor;
+}
+
+void loop()
+{
+ // getting the voltage reading from the temperature sensor 
+  int reading=analogRead(sensorPin);
+  
+  // converting thet reading to voltage, for 3.3V arduino use 3.3
+  float voltage= reading * supply_voltage/1024;
+  
+  float temperatureC=(voltage-0.5)*100; // converting from 10 mv per degree with 500 mv offset
+                                        // to degrees ((voltage-500mv) times 100)
+  Serial.print(temperatureC);
+  Serial.println(" degrees C");
+  
+  // now convert to fahrernheit
+  float temperatureF= (temperatureC *9.0/5.0) +32.0;
+  
+  Serial.print(temperatureF); 
+  Serial.println(" degrees F");
+  
+  delay(1000);
+}
