@@ -1,0 +1,74 @@
+// Project 24: Working of MPU6050 Sensor
+
+// Include necessary libraries for I2C and MPU6050
+#include <Wire.h>         // For I2C communication
+#include <MPU6050.h>      // MPU6050 library by Jeff Rowberg
+
+// Create an object of the MPU6050 class
+MPU6050 mpu;
+
+void setup() {
+  Serial.begin(9600);     // Start serial communication at 9600 baud rate
+  Wire.begin();           // Initialize I2C communication
+
+  Serial.println("Initializing MPU6050...");
+  mpu.initialize();       // Wake up the MPU6050 and configure registers
+
+  // Check if the MPU6050 is connected properly
+  if (mpu.testConnection()) {
+    Serial.println("MPU6050 connected successfully!");
+  } else {
+    Serial.println("MPU6050 connection failed!");
+    while (1);  // Stop execution if sensor not detected
+  }
+}
+
+void loop() {
+  // Declare variables to hold raw accelerometer, gyroscope, and temperature values
+  int16_t ax, ay, az;     // Accelerometer X, Y, Z
+  int16_t gx, gy, gz;     // Gyroscope X, Y, Z
+  int16_t tempRaw;        // Raw temperature
+
+  // Read all 6 motion values from the sensor (accel + gyro)
+  mpu.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
+
+  // Read raw temperature
+  tempRaw = mpu.getTemperature();
+
+  // Convert raw accelerometer values to g (gravity units)
+  float ax_g = ax / 16384.0;
+  float ay_g = ay / 16384.0;
+  float az_g = az / 16384.0;
+
+  // Convert raw gyroscope values to degrees per second (°/s)
+  float gx_deg = gx / 131.0;
+  float gy_deg = gy / 131.0;
+  float gz_deg = gz / 131.0;
+
+  // Convert raw temperature to Celsius using datasheet formula
+  float tempC = tempRaw / 340.0 + 36.53;
+
+  // Print accelerometer data in g
+  Serial.print("Accel (g): X=");
+  Serial.print(ax_g, 2);    // X-axis acceleration
+  Serial.print(" Y=");
+  Serial.print(ay_g, 2);    // Y-axis acceleration
+  Serial.print(" Z=");
+  Serial.print(az_g, 2);    // Z-axis acceleration
+
+  // Print gyroscope data in degrees/sec
+  Serial.print(" | Gyro (°/s): X=");
+  Serial.print(gx_deg, 2);  // X-axis rotation
+  Serial.print(" Y=");
+  Serial.print(gy_deg, 2);  // Y-axis rotation
+  Serial.print(" Z=");
+  Serial.print(gz_deg, 2);  // Z-axis rotation
+
+  // Print temperature in Celsius
+  Serial.print(" | Temp: ");
+  Serial.print(tempC, 2);
+  Serial.println(" °C");
+
+  // Wait for 500 milliseconds before next reading
+  delay(500);
+}
