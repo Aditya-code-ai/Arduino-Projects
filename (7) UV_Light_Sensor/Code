@@ -1,0 +1,24 @@
+// Project 7: Working of UV light sensor(GUVA-S12SD)
+
+void setup()
+{
+ Serial.begin(9600);
+}
+
+void loop()
+{
+  // read the input on analog pin 0;
+  int sensorValue= analogRead(A0);
+  
+  // calculate the actual voltage at sensor out 
+  float voltage= sensorValue*(5.0/1023.0);
+  
+  // print the value of analog input 
+  Serial.print(sensorValue);
+  Serial.print(",");
+  
+  // print the UV index value. As per the specifications for the sensor,
+  // this is done by dividing the sensor output voltage by 0.1
+  Serial.println(voltage/0.1);
+  delay(100);    // delay in between reads for stability
+}
