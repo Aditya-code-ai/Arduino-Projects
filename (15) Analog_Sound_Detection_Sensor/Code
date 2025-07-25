@@ -1,0 +1,26 @@
+// Project 15: Working of Analog Sound detection sensor (sensing sound)
+
+const int soundSensorPin = A0; // Analog pin connected to the sound sensor
+const int ledPin = 7;          // Digital pin connected to the LED
+const int threshold = 500;     // Threshold for sound intensity
+
+void setup() {
+  pinMode(ledPin, OUTPUT); // Set the LED pin as an output
+  Serial.begin(9600);      // Initialize serial communication
+}
+
+void loop() {
+  int soundLevel = analogRead(soundSensorPin); // Read sound sensor value
+  
+  Serial.print("Sound Level: ");
+  Serial.println(soundLevel); // Print the sound level to Serial Monitor
+
+  // Check if the sound level exceeds the threshold
+  if (soundLevel > threshold) {
+    digitalWrite(ledPin, HIGH); // Turn on the LED
+  } else {
+    digitalWrite(ledPin, LOW);  // Turn off the LED
+  }
+
+  delay(100); // Small delay for readability
+}
