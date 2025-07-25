@@ -1,0 +1,32 @@
+// Project 22: Working of ADXL355 accelaration sensor 
+
+const int xPin = A0; // X-axis analog output
+const int yPin = A1; // Y-axis analog output
+const int zPin = A2; // Z-axis analog output
+
+void setup() {
+  Serial.begin(9600); // Initialize Serial Monitor
+}
+
+void loop() {
+  // Read analog values from the sensor
+  int xValue = analogRead(xPin);
+  int yValue = analogRead(yPin);
+  int zValue = analogRead(zPin);
+
+  // Convert raw values to acceleration in g (optional calibration)
+  float xAcc = map(xValue, 0, 1023, -3, 3);
+  float yAcc = map(yValue, 0, 1023, -3, 3);
+  float zAcc = map(zValue, 0, 1023, -3, 3);
+
+  // Print values to Serial Monitor
+  Serial.print("X: ");
+  Serial.print(xAcc);
+  Serial.print(" g, Y: ");
+  Serial.print(yAcc);
+  Serial.print(" g, Z: ");
+  Serial.print(zAcc);
+  Serial.println(" g");
+
+  delay(500); // Delay for readability
+}
