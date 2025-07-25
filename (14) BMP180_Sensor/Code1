@@ -1,0 +1,72 @@
+// Project 14: Working of BMP180 sensor
+// In the place of SDA and SCL we also use A4 and A5 analog pins
+
+#include <Wire.h>
+#include <SFE_BMP180.h>
+
+// Create an instance of the SFE_BMP180 class
+SFE_BMP180 bmp;
+
+// Variables for temperature and pressure
+double temperature, pressure;
+
+void setup() {
+  Serial.begin(9600);
+  Serial.println("BMP180 Sensor Test");
+
+  // Initialize the BMP180
+  if (!bmp.begin()) {
+    Serial.println("BMP180 initialization failed. Check connections.");
+    while (1);
+  }
+  Serial.println("BMP180 initialized successfully!");
+}
+
+void loop() {
+  char status;
+  double altitude;
+
+  // Start a temperature measurement
+  status = bmp.startTemperature();
+  if (status != 0) {
+    delay(status); // Wait for the measurement to complete
+
+    // Retrieve the temperature
+    status = bmp.getTemperature(temperature);
+    if (status != 0) {
+      Serial.print("Temperature: ");
+      Serial.print(temperature, 2);
+      Serial.println(" *C");
+    } else {
+      Serial.println("Error retrieving temperature.");
+    }
+  } else {
+    Serial.println("Error starting temperature measurement.");
+  }
+
+  // Start a pressure measurement
+  status = bmp.startPressure(3); // Oversampling setting: 0(fastest) to 3(most accurate).
+  if (status != 0) {
+    delay(status); // Wait for the measurement to complete
+
+    // Retrieve the pressure
+    status = bmp.getPressure(pressure, temperature);
+    if (status != 0) {
+      Serial.print("Pressure: ");
+      Serial.print(pressure, 2);
+      Serial.println(" Pa");
+
+      // Calculate altitude based on standard sea-level pressure (101325 Pa)
+      altitude = bmp.altitude(pressure, 101325);
+      Serial.print("Altitude: ");
+      Serial.print(altitude, 2);
+      Serial.println(" m");
+    } else {
+      Serial.println("Error retrieving pressure.");
+    }
+  } else {
+    Serial.println("Error starting pressure measurement.");
+  }
+
+  delay(2000); // Wait 2 seconds before the next measurement
+}
