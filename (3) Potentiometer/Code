@@ -1,0 +1,21 @@
+// Project 3: Working of Potentiometer
+
+void setup()
+{
+  pinMode(6, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  int potvalue= analogRead(A0);
+  Serial.println(analogRead(A0));
+  int mappedValue= map(potvalue, 0, 1023, 0, 255);
+  analogWrite(6,mappedValue);
+}  //analogRead()  possible 0...1023
+   //analogWrite() possible 0...255
+
+   /* map function is used to convert the range of one function to
+   another.*/
+   /*connect pin 7 instead of 6 and compare potvalue and 
+   mappedValue by putting in analogWrite bracket.*/
