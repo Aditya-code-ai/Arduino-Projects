@@ -1,0 +1,31 @@
+// Project 6: Working of Photoresistor
+
+void setup(){
+Serial.begin(9600);
+}
+
+void loop(){
+int sensorValue = analogRead(A0); // ranges 0...1023
+  Serial.println(sensorValue);
+  delay(10);
+} 
+
+//The circuit is known as "voltage divider".
+
+/* Resistance of photoresistor is inversely proportional to 
+   intensity of light , brighter the light lesser the 
+   resistance. */
+
+/* Photoresistor (resistance range)
+Min   0.300k-ohm   Bright light
+Max   70k-ohm      less light (black)
+Med   1.3k-ohm     normal */
+
+/* Serial monitor shows the value between the range 0....1023
+   based on vout, vout= vin/(R1+R2)*R2
+   where R1=photo-resistance, R2=resistance of resistor
+   Vin=5V */
+
+/* here, the range of photo-resistor is from 506ohm to 180k-ohm
+   you can check on the multimeter by varying the brightness
+   level. */
