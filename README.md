@@ -58,9 +58,7 @@ Each project contains:
 
 - Arduino Source Code
 - Circuit Diagram
-- Simulation Files
-- Basic Documentation
-
+  
 ---
 
 # 🛠 Tools Used
